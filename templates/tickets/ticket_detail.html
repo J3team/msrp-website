@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Ticket #{{ ticket.id }} - Mountainside RP{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-ticket-alt"></i> Ticket #{{ ticket.id }} - {{ ticket.title }}
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <strong>Category:</strong> {{ ticket.get_category_display }}<br>
+                        <strong>Created:</strong> {{ ticket.created_at|date:"M d, Y H:i" }}<br>
+                        <strong>Last Updated:</strong> {{ ticket.updated_at|date:"M d, Y H:i" }}
+                    </div>
+                    <hr>
+                    <h5>Description</h5>
+                    <p>{{ ticket.description }}</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-comments"></i> Messages</h5>
+                </div>
+                <div class="card-body">
+                    {% if ticket.messages.all %}
+                        {% for message in ticket.messages.all %}
+                        <div class="mb-3 p-3 {% if message.is_staff_reply %}bg-light{% else %}border{% endif %} rounded">
+                            <div class="d-flex justify-content-between mb-2">
+                                <strong>
+                                    {% if message.is_staff_reply %}
+                                        <i class="fas fa-user-shield text-primary"></i> Staff
+                                    {% else %}
+                                        <i class="fas fa-user"></i> {{ message.user.username }}
+                                    {% endif %}
+                                </strong>
+                                <small class="text-muted">{{ message.created_at|date:"M d, Y H:i" }}</small>
+                            </div>
+                            <p class="mb-0">{{ message.message }}</p>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">No messages yet. Our staff will respond soon!</p>
+                    {% endif %}
+
+                    {% if ticket.status != 'closed' %}
+                    <hr>
+                    <h6>Add a Message</h6>
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i> Send Message
+                        </button>
+                    </form>
+                    {% else %}
+                        <div class="alert alert-info mt-3">
+                            <i class="fas fa-info-circle"></i> This ticket is closed. Contact staff to reopen it.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Ticket Status</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <strong>Status:</strong><br>
+                        {% if ticket.status == 'open' %}
+                            <span class="badge bg-primary badge-status">Open</span>
+                        {% elif ticket.status == 'in_progress' %}
+                            <span class="badge bg-info badge-status">In Progress</span>
+                        {% elif ticket.status == 'resolved' %}
+                            <span class="badge bg-success badge-status">Resolved</span>
+                        {% else %}
+                            <span class="badge bg-secondary badge-status">Closed</span>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <strong>Priority:</strong><br>
+                        {% if ticket.priority == 'urgent' %}
+                            <span class="badge bg-danger badge-status">Urgent</span>
+                        {% elif ticket.priority == 'high' %}
+                            <span class="badge bg-warning badge-status">High</span>
+                        {% elif ticket.priority == 'medium' %}
+                            <span class="badge bg-info badge-status">Medium</span>
+                        {% else %}
+                            <span class="badge bg-secondary badge-status">Low</span>
+                        {% endif %}
+                    </div>
+                    {% if ticket.assigned_to %}
+                    <div class="mb-3">
+                        <strong>Assigned To:</strong><br>
+                        <i class="fas fa-user-shield"></i> {{ ticket.assigned_to.username }}
+                    </div>
+                    {% endif %}
+                    <a href="{% url 'ticket_list' %}" class="btn btn-outline-secondary w-100">
+                        <i class="fas fa-arrow-left"></i> Back to Tickets
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}My Applications - Mountainside RP{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="mb-4"><i class="fas fa-file-alt"></i> My Applications</h2>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-user-tie"></i> Staff Applications</h5>
+                </div>
+                <div class="card-body">
+                    {% if staff_apps %}
+                        {% for app in staff_apps %}
+                        <div class="mb-3 p-3 border rounded">
+                            <h6>{{ app.get_position_display }}</h6>
+                            <p class="mb-2">
+                                <strong>Status:</strong>
+                                {% if app.status == 'pending' %}
+                                    <span class="badge bg-warning">Pending Review</span>
+                                {% elif app.status == 'under_review' %}
+                                    <span class="badge bg-info">Under Review</span>
+                                {% elif app.status == 'interview' %}
+                                    <span class="badge bg-primary">Interview Scheduled</span>
+                                {% elif app.status == 'accepted' %}
+                                    <span class="badge bg-success">Accepted</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Rejected</span>
+                                {% endif %}
+                            </p>
+                            <small class="text-muted">Submitted: {{ app.created_at|date:"M d, Y" }}</small>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">No staff applications yet.</p>
+                        <a href="{% url 'apply_staff' %}" class="btn btn-primary btn-sm">
+                            Apply Now
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-clipboard-check"></i> Whitelist Applications</h5>
+                </div>
+                <div class="card-body">
+                    {% if whitelist_apps %}
+                        {% for app in whitelist_apps %}
+                        <div class="mb-3 p-3 border rounded">
+                            <h6>{{ app.character_name }}</h6>
+                            <p class="mb-2">
+                                <strong>Status:</strong>
+                                {% if app.status == 'pending' %}
+                                    <span class="badge bg-warning">Pending Review</span>
+                                {% elif app.status == 'approved' %}
+                                    <span class="badge bg-success">Approved</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Rejected</span>
+                                {% endif %}
+                            </p>
+                            <small class="text-muted">Submitted: {{ app.created_at|date:"M d, Y" }}</small>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">No whitelist applications yet.</p>
+                        <a href="{% url 'apply_whitelist' %}" class="btn btn-primary btn-sm">
+                            Apply Now
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(.venv/Scripts/python.exe -m pip install django pillow django-crispy-forms crispy-bootstrap4)",
+      "Bash(.venv/Scripts/django-admin.exe startproject msrp_site .)",
+      "Bash(.venv/Scripts/python.exe manage.py startapp home)",
+      "Bash(.venv/Scripts/python.exe manage.py startapp accounts)",
+      "Bash(.venv/Scripts/python.exe manage.py startapp tickets)",
+      "Bash(.venv/Scripts/python.exe manage.py startapp shop)",
+      "Bash(.venv/Scripts/python.exe manage.py startapp applications)",
+      "Bash(git add .)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

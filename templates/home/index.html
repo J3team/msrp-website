@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="hero-section text-center">
+    <div class="container">
+        <h1 class="display-3 fw-bold mb-4">
+            <i class="fas fa-mountain"></i> Mountainside Roleplay
+        </h1>
+        <p class="lead mb-4">
+            Experience the most immersive FiveM roleplay server. Join our community today!
+        </p>
+        <div class="d-flex gap-3 justify-content-center">
+            {% if not user.is_authenticated %}
+                <a href="{% url 'register' %}" class="btn btn-light btn-lg">
+                    <i class="fas fa-user-plus"></i> Join Now
+                </a>
+            {% endif %}
+            <a href="{% url 'shop_index' %}" class="btn btn-outline-light btn-lg">
+                <i class="fas fa-store"></i> Visit Shop
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="container my-5">
+    <div class="row text-center mb-5">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <i class="fas fa-users fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">Active Community</h5>
+                    <p class="card-text">Join hundreds of active players in our vibrant roleplay community.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <i class="fas fa-shield-alt fa-3x text-success mb-3"></i>
+                    <h5 class="card-title">Professional Staff</h5>
+                    <p class="card-text">Our dedicated staff team ensures a fair and enjoyable experience for all.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <i class="fas fa-gamepad fa-3x text-danger mb-3"></i>
+                    <h5 class="card-title">Unique Content</h5>
+                    <p class="card-text">Custom scripts, vehicles, and features you won't find anywhere else.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if featured_items %}
+    <h2 class="text-center mb-4">Featured Shop Items</h2>
+    <div class="row">
+        {% for item in featured_items %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                {% if item.image %}
+                <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.name }}" style="height: 200px; object-fit: cover;">
+                {% else %}
+                <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 200px;">
+                    <i class="fas fa-image fa-3x text-white-50"></i>
+                </div>
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ item.name }}</h5>
+                    <p class="card-text">{{ item.description|truncatewords:15 }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="h5 mb-0 text-primary">${{ item.price }}</span>
+                        <a href="{% url 'shop_item_detail' item.pk %}" class="btn btn-sm btn-primary">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="text-center mt-5">
+        <h2 class="mb-4">Ready to Start Your Journey?</h2>
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+            <a href="{% url 'apply_whitelist' %}" class="btn btn-primary btn-lg">
+                <i class="fas fa-clipboard-check"></i> Apply for Whitelist
+            </a>
+            <a href="{% url 'apply_staff' %}" class="btn btn-outline-primary btn-lg">
+                <i class="fas fa-user-tie"></i> Apply for Staff
+            </a>
+            <a href="{% url 'ticket_create' %}" class="btn btn-outline-secondary btn-lg">
+                <i class="fas fa-question-circle"></i> Get Support
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
