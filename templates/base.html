@@ -5,86 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Mountainside Roleplay{% endblock %}</title>
 
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap & Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <style>
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #e74c3c;
-            --accent-color: #3498db;
-        }
+    <!-- Animate.css for animations -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 
-        body {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .navbar {
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color)) !important;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .navbar-brand {
-            font-weight: bold;
-            font-size: 1.5rem;
-        }
-
-        .nav-link {
-            color: rgba(255,255,255,0.9) !important;
-            transition: color 0.3s;
-        }
-
-        .nav-link:hover {
-            color: white !important;
-        }
-
-        .btn-primary {
-            background-color: var(--accent-color);
-            border-color: var(--accent-color);
-        }
-
-        .btn-primary:hover {
-            background-color: #2980b9;
-            border-color: #2980b9;
-        }
-
-        .btn-danger {
-            background-color: var(--secondary-color);
-            border-color: var(--secondary-color);
-        }
-
-        .card {
-            border: none;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-        }
-
-        footer {
-            margin-top: auto;
-            background-color: var(--primary-color);
-            color: white;
-            padding: 2rem 0;
-        }
-
-        .hero-section {
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-            color: white;
-            padding: 4rem 0;
-            margin-bottom: 2rem;
-        }
-
-        .badge-status {
-            padding: 0.5rem 1rem;
-            font-size: 0.9rem;
-        }
-    </style>
+    <!-- Custom Styles -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
     {% block extra_css %}{% endblock %}
 </head>
@@ -178,36 +111,130 @@
 
     <footer class="mt-5">
         <div class="container">
-            <div class="row">
-                <div class="col-md-4">
-                    <h5><i class="fas fa-mountain"></i> Mountainside RP</h5>
-                    <p>The premier FiveM roleplay experience.</p>
-                </div>
-                <div class="col-md-4">
-                    <h5>Quick Links</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="{% url 'home' %}" class="text-white-50">Home</a></li>
-                        <li><a href="{% url 'shop_index' %}" class="text-white-50">Shop</a></li>
-                        <li><a href="{% url 'apply_whitelist' %}" class="text-white-50">Apply for Whitelist</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-4">
-                    <h5>Connect With Us</h5>
-                    <div class="social-links">
-                        <a href="#" class="text-white-50 me-3"><i class="fab fa-discord fa-2x"></i></a>
-                        <a href="#" class="text-white-50 me-3"><i class="fab fa-twitter fa-2x"></i></a>
-                        <a href="#" class="text-white-50"><i class="fab fa-youtube fa-2x"></i></a>
+            <div class="row py-4">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h4 class="mb-3"><i class="fas fa-mountain"></i> Mountainside RP</h4>
+                    <p class="text-white-50 mb-3">The premier FiveM roleplay experience. Join our community and immerse yourself in endless possibilities.</p>
+                    <div class="social-links mt-3">
+                        <a href="https://discord.gg/mountainsiderp" target="_blank" class="text-white-50 me-3" title="Join our Discord">
+                            <i class="fab fa-discord fa-2x"></i>
+                        </a>
+                        <a href="https://twitter.com/mountainsiderp" target="_blank" class="text-white-50 me-3" title="Follow us on Twitter">
+                            <i class="fab fa-twitter fa-2x"></i>
+                        </a>
+                        <a href="https://youtube.com/@mountainsiderp" target="_blank" class="text-white-50 me-3" title="Subscribe on YouTube">
+                            <i class="fab fa-youtube fa-2x"></i>
+                        </a>
+                        <a href="https://tiktok.com/@mountainsiderp" target="_blank" class="text-white-50" title="Follow on TikTok">
+                            <i class="fab fa-tiktok fa-2x"></i>
+                        </a>
                     </div>
                 </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5 class="mb-3">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="{% url 'home' %}" class="text-white-50"><i class="fas fa-chevron-right me-2"></i>Home</a></li>
+                        <li class="mb-2"><a href="{% url 'shop_index' %}" class="text-white-50"><i class="fas fa-chevron-right me-2"></i>Shop</a></li>
+                        <li class="mb-2"><a href="{% url 'ticket_create' %}" class="text-white-50"><i class="fas fa-chevron-right me-2"></i>Support</a></li>
+                        {% if user.is_staff %}
+                        <li class="mb-2"><a href="{% url 'admin_dashboard' %}" class="text-white-50"><i class="fas fa-chevron-right me-2"></i>Admin Panel</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="mb-3">Applications</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="{% url 'apply_whitelist' %}" class="text-white-50"><i class="fas fa-chevron-right me-2"></i>Whitelist Application</a></li>
+                        <li class="mb-2"><a href="{% url 'apply_staff' %}" class="text-white-50"><i class="fas fa-chevron-right me-2"></i>Staff Application</a></li>
+                        {% if user.is_authenticated %}
+                        <li class="mb-2"><a href="{% url 'my_applications' %}" class="text-white-50"><i class="fas fa-chevron-right me-2"></i>My Applications</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="mb-3">Server Info</h5>
+                    <ul class="list-unstyled text-white-50">
+                        <li class="mb-2"><i class="fas fa-server me-2"></i>Server IP: <strong>connect mountainside.rp</strong></li>
+                        <li class="mb-2"><i class="fas fa-users me-2"></i>Max Players: <strong>64</strong></li>
+                        <li class="mb-2"><i class="fas fa-globe me-2"></i>Region: <strong>US</strong></li>
+                    </ul>
+                </div>
             </div>
-            <hr class="bg-white">
-            <div class="text-center">
-                <p>&copy; 2025 Mountainside Roleplay. All rights reserved.</p>
+            <hr class="bg-white-50 my-4">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    <p class="mb-0 text-white-50">&copy; 2025 Mountainside Roleplay. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <p class="mb-0 text-white-50">Made with <i class="fas fa-heart text-danger"></i> for the RP community</p>
+                </div>
             </div>
         </div>
     </footer>
 
+    <!-- Back to Top Button -->
+    <button id="backToTop" class="btn btn-primary" style="display: none; position: fixed; bottom: 30px; right: 30px; z-index: 999; border-radius: 50%; width: 50px; height: 50px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script>
+        // Back to Top Button
+        const backToTopButton = document.getElementById('backToTop');
+
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                backToTopButton.style.display = 'block';
+            } else {
+                backToTopButton.style.display = 'none';
+            }
+        });
+
+        backToTopButton.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Add fade-in animation to cards on scroll
+        const cards = document.querySelectorAll('.card');
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '0';
+                    entry.target.style.transform = 'translateY(20px)';
+                    setTimeout(() => {
+                        entry.target.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }, 100);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        cards.forEach(card => {
+            observer.observe(card);
+        });
+
+        // Auto-dismiss alerts after 5 seconds
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                const bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            });
+        }, 5000);
+    </script>
+
     {% block extra_js %}{% endblock %}
 </body>
 </html>
