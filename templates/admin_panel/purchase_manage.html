@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Purchase #{{ purchase.id }} - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-shopping-cart"></i> Manage Purchase #{{ purchase.id }}</h2>
+        <a href="{% url 'admin_shop' %}?view=purchases" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Purchases
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">Purchase Details</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <p><strong>Customer:</strong> {{ purchase.user.username }}</p>
+                            <p><strong>Email:</strong> {{ purchase.user.email }}</p>
+                            <p><strong>Discord:</strong> {{ purchase.user.profile.discord_id|default:"Not set" }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Order Date:</strong> {{ purchase.created_at|date:"M d, Y H:i" }}</p>
+                            <p><strong>Last Updated:</strong> {{ purchase.updated_at|date:"M d, Y H:i" }}</p>
+                            <p><strong>Transaction ID:</strong> {{ purchase.transaction_id|default:"N/A" }}</p>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <h5>Order Items</h5>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ purchase.item.name }}</td>
+                                <td>${{ purchase.item.price }}</td>
+                                <td>{{ purchase.quantity }}</td>
+                                <td><strong>${{ purchase.total_price }}</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    {% if purchase.notes %}
+                    <hr>
+                    <h5>Notes</h5>
+                    <p>{{ purchase.notes }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Update Status</h5>
+                </div>
+                <div class="card-body">
+                    <p>Current Status:</p>
+                    <p>
+                        <span class="badge bg-{% if purchase.status == 'completed' %}success{% elif purchase.status == 'pending' %}warning{% elif purchase.status == 'processing' %}info{% elif purchase.status == 'failed' %}danger{% else %}secondary{% endif %} badge-status">
+                            {{ purchase.get_status_display }}
+                        </span>
+                    </p>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">Change Status</label>
+                            <select name="status" class="form-select">
+                                <option value="pending" {% if purchase.status == 'pending' %}selected{% endif %}>Pending</option>
+                                <option value="processing" {% if purchase.status == 'processing' %}selected{% endif %}>Processing</option>
+                                <option value="completed" {% if purchase.status == 'completed' %}selected{% endif %}>Completed</option>
+                                <option value="refunded" {% if purchase.status == 'refunded' %}selected{% endif %}>Refunded</option>
+                                <option value="failed" {% if purchase.status == 'failed' %}selected{% endif %}>Failed</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Update Status</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

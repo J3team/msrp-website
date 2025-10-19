@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% block title %}Review Application - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-file-alt"></i> Review Application #{{ application.id }}</h2>
+        <a href="{% url 'admin_applications' %}?type={{ app_type }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Applications
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4 class="mb-0">Application Details</h4>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <strong>Applicant:</strong> {{ application.user.username }} ({{ application.user.email }})<br>
+                        <strong>Submitted:</strong> {{ application.created_at|date:"M d, Y H:i" }}<br>
+                        <strong>Current Status:</strong>
+                        <span class="badge bg-{% if application.status == 'pending' %}warning{% elif application.status == 'accepted' or application.status == 'approved' %}success{% elif application.status == 'rejected' %}danger{% else %}info{% endif %}">
+                            {{ application.get_status_display }}
+                        </span>
+                    </div>
+                    <hr>
+
+                    {% if app_type == 'staff' %}
+                    <h5>Position Applied For</h5>
+                    <p>{{ application.get_position_display }}</p>
+
+                    <h5>Personal Information</h5>
+                    <p><strong>Age:</strong> {{ application.age }}</p>
+                    <p><strong>Timezone:</strong> {{ application.timezone }}</p>
+                    <p><strong>Availability:</strong> {{ application.hours_available }}</p>
+
+                    <h5>Experience</h5>
+                    <p>{{ application.experience }}</p>
+
+                    <h5>Why do you want to join?</h5>
+                    <p>{{ application.why_join }}</p>
+
+                    <h5>Scenario Response</h5>
+                    <p>{{ application.scenario_response }}</p>
+
+                    {% if application.additional_info %}
+                    <h5>Additional Information</h5>
+                    <p>{{ application.additional_info }}</p>
+                    {% endif %}
+
+                    {% else %}
+                    <h5>Character Information</h5>
+                    <p><strong>Character Name:</strong> {{ application.character_name }}</p>
+                    <p><strong>Character Age:</strong> {{ application.character_age }}</p>
+
+                    <h5>Character Backstory</h5>
+                    <p>{{ application.character_backstory }}</p>
+
+                    <h5>Roleplay Experience</h5>
+                    <p>{{ application.rp_experience }}</p>
+
+                    <h5>Scenario Response</h5>
+                    <p>{{ application.scenario_response }}</p>
+
+                    <p><strong>Server Rules Read:</strong> {% if application.server_rules_read %}<span class="badge bg-success">Yes</span>{% else %}<span class="badge bg-danger">No</span>{% endif %}</p>
+
+                    {% if application.referral %}
+                    <h5>How did you find us?</h5>
+                    <p>{{ application.referral }}</p>
+                    {% endif %}
+                    {% endif %}
+
+                    {% if application.review_notes %}
+                    <hr>
+                    <h5>Previous Review Notes</h5>
+                    <div class="alert alert-info">
+                        <strong>Reviewed by {{ application.reviewed_by.username }}:</strong><br>
+                        {{ application.review_notes }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Review Actions</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">Review Notes</label>
+                            <textarea name="review_notes" class="form-control" rows="4" placeholder="Add your review notes...">{{ application.review_notes }}</textarea>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" name="action" value="approve" class="btn btn-success">
+                                <i class="fas fa-check"></i> Approve Application
+                            </button>
+
+                            {% if app_type == 'staff' %}
+                            <button type="submit" name="action" value="interview" class="btn btn-info">
+                                <i class="fas fa-calendar"></i> Schedule Interview
+                            </button>
+                            {% endif %}
+
+                            <button type="submit" name="action" value="reject" class="btn btn-danger">
+                                <i class="fas fa-times"></i> Reject Application
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="mb-0">Applicant Info</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Username:</strong> {{ application.user.username }}</p>
+                    <p><strong>Email:</strong> {{ application.user.email }}</p>
+                    <p><strong>Discord:</strong> {{ application.user.profile.discord_id|default:"Not set" }}</p>
+                    <p><strong>Steam ID:</strong> {{ application.user.profile.steam_id|default:"Not set" }}</p>
+                    <p><strong>Member Since:</strong> {{ application.user.date_joined|date:"M d, Y" }}</p>
+                    <p><strong>Whitelisted:</strong> {% if application.user.profile.is_whitelisted %}<span class="badge bg-success">Yes</span>{% else %}<span class="badge bg-secondary">No</span>{% endif %}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

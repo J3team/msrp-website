@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Ticket #{{ ticket.id }} - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-ticket-alt"></i> Manage Ticket #{{ ticket.id }}</h2>
+        <a href="{% url 'admin_tickets' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Tickets
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4 class="mb-0">{{ ticket.title }}</h4>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <strong>User:</strong> {{ ticket.user.username }} ({{ ticket.user.email }})<br>
+                        <strong>Category:</strong> {{ ticket.get_category_display }}<br>
+                        <strong>Created:</strong> {{ ticket.created_at|date:"M d, Y H:i" }}<br>
+                        <strong>Last Updated:</strong> {{ ticket.updated_at|date:"M d, Y H:i" }}
+                    </div>
+                    <hr>
+                    <h5>Description</h5>
+                    <p>{{ ticket.description }}</p>
+                </div>
+            </div>
+
+            <!-- Messages -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-comments"></i> Messages</h5>
+                </div>
+                <div class="card-body">
+                    {% for message in ticket.messages.all %}
+                    <div class="mb-3 p-3 {% if message.is_staff_reply %}bg-light{% else %}border{% endif %} rounded">
+                        <div class="d-flex justify-content-between mb-2">
+                            <strong>
+                                {% if message.is_staff_reply %}
+                                    <i class="fas fa-user-shield text-primary"></i> {{ message.user.username }} (Staff)
+                                {% else %}
+                                    <i class="fas fa-user"></i> {{ message.user.username }}
+                                {% endif %}
+                            </strong>
+                            <small class="text-muted">{{ message.created_at|date:"M d, Y H:i" }}</small>
+                        </div>
+                        <p class="mb-0">{{ message.message }}</p>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted">No messages yet</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <!-- Status Management -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="mb-0">Status Management</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="status">
+                        <div class="mb-3">
+                            <label class="form-label">Change Status</label>
+                            <select name="status" class="form-select">
+                                <option value="open" {% if ticket.status == 'open' %}selected{% endif %}>Open</option>
+                                <option value="in_progress" {% if ticket.status == 'in_progress' %}selected{% endif %}>In Progress</option>
+                                <option value="resolved" {% if ticket.status == 'resolved' %}selected{% endif %}>Resolved</option>
+                                <option value="closed" {% if ticket.status == 'closed' %}selected{% endif %}>Closed</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Update Status</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Priority Management -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="mb-0">Priority</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="priority">
+                        <div class="mb-3">
+                            <label class="form-label">Change Priority</label>
+                            <select name="priority" class="form-select">
+                                <option value="low" {% if ticket.priority == 'low' %}selected{% endif %}>Low</option>
+                                <option value="medium" {% if ticket.priority == 'medium' %}selected{% endif %}>Medium</option>
+                                <option value="high" {% if ticket.priority == 'high' %}selected{% endif %}>High</option>
+                                <option value="urgent" {% if ticket.priority == 'urgent' %}selected{% endif %}>Urgent</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-warning w-100">Update Priority</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Assignment -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Assignment</h5>
+                </div>
+                <div class="card-body">
+                    {% if ticket.assigned_to %}
+                    <p><strong>Assigned to:</strong> {{ ticket.assigned_to.username }}</p>
+                    {% else %}
+                    <p class="text-muted">Not assigned</p>
+                    {% endif %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="assign">
+                        <button type="submit" class="btn btn-success w-100">Assign to Me</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

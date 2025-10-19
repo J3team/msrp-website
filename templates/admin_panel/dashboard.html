@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard - Mountainside RP{% endblock %}
+
+{% block content %}
+<div class="container-fluid my-4">
+    <h1 class="mb-4"><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h1>
+
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h3>{{ total_users }}</h3>
+                    <p class="mb-0"><i class="fas fa-users"></i> Total Users</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <h3>{{ open_tickets }}</h3>
+                    <p class="mb-0"><i class="fas fa-ticket-alt"></i> Open Tickets</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h3>{{ pending_staff_apps }}</h3>
+                    <p class="mb-0"><i class="fas fa-user-tie"></i> Pending Staff Apps</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h3>{{ pending_whitelist_apps }}</h3>
+                    <p class="mb-0"><i class="fas fa-clipboard-check"></i> Pending Whitelist</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-bolt"></i> Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <a href="{% url 'admin_tickets' %}" class="btn btn-primary me-2 mb-2">
+                        <i class="fas fa-ticket-alt"></i> Manage Tickets
+                    </a>
+                    <a href="{% url 'admin_applications' %}" class="btn btn-info me-2 mb-2">
+                        <i class="fas fa-file-alt"></i> Review Applications
+                    </a>
+                    <a href="{% url 'admin_users' %}" class="btn btn-success me-2 mb-2">
+                        <i class="fas fa-users"></i> Manage Users
+                    </a>
+                    <a href="{% url 'admin_shop' %}" class="btn btn-warning me-2 mb-2">
+                        <i class="fas fa-store"></i> Manage Shop
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-ticket-alt"></i> Recent Tickets</h5>
+                </div>
+                <div class="card-body">
+                    {% if recent_tickets %}
+                    <div class="list-group list-group-flush">
+                        {% for ticket in recent_tickets %}
+                        <a href="{% url 'admin_ticket_manage' ticket.pk %}" class="list-group-item list-group-item-action">
+                            <div class="d-flex justify-content-between">
+                                <strong>Ticket #{{ ticket.id }}</strong>
+                                <span class="badge bg-{{ ticket.status == 'open' and 'primary' or 'secondary' }}">
+                                    {{ ticket.get_status_display }}
+                                </span>
+                            </div>
+                            <small class="text-muted">{{ ticket.title|truncatewords:10 }}</small>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-muted mb-0">No recent tickets</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-shopping-cart"></i> Recent Purchases</h5>
+                </div>
+                <div class="card-body">
+                    {% if recent_purchases %}
+                    <div class="list-group list-group-flush">
+                        {% for purchase in recent_purchases %}
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between">
+                                <strong>{{ purchase.user.username }}</strong>
+                                <span class="badge bg-{{ purchase.status == 'completed' and 'success' or 'warning' }}">
+                                    {{ purchase.get_status_display }}
+                                </span>
+                            </div>
+                            <small class="text-muted">{{ purchase.item.name }} - ${{ purchase.total_price }}</small>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-muted mb-0">No recent purchases</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

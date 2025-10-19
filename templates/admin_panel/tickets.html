@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Tickets - Admin Panel{% endblock %}
+
+{% block content %}
+<div class="container-fluid my-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-ticket-alt"></i> Manage Tickets</h2>
+        <a href="{% url 'admin_dashboard' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <!-- Filter Tabs -->
+    <ul class="nav nav-tabs mb-4">
+        <li class="nav-item">
+            <a class="nav-link {% if status_filter == 'all' %}active{% endif %}" href="?status=all">
+                All Tickets
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if status_filter == 'open' %}active{% endif %}" href="?status=open">
+                Open
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if status_filter == 'in_progress' %}active{% endif %}" href="?status=in_progress">
+                In Progress
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if status_filter == 'resolved' %}active{% endif %}" href="?status=resolved">
+                Resolved
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if status_filter == 'closed' %}active{% endif %}" href="?status=closed">
+                Closed
+            </a>
+        </li>
+    </ul>
+
+    <!-- Tickets Table -->
+    {% if tickets %}
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>User</th>
+                            <th>Category</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                            <th>Assigned To</th>
+                            <th>Created</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ticket in tickets %}
+                        <tr>
+                            <td>#{{ ticket.id }}</td>
+                            <td>{{ ticket.title|truncatewords:8 }}</td>
+                            <td>{{ ticket.user.username }}</td>
+                            <td>{{ ticket.get_category_display }}</td>
+                            <td>
+                                <span class="badge bg-{% if ticket.priority == 'urgent' %}danger{% elif ticket.priority == 'high' %}warning{% else %}secondary{% endif %}">
+                                    {{ ticket.get_priority_display }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge bg-{% if ticket.status == 'open' %}primary{% elif ticket.status == 'in_progress' %}info{% elif ticket.status == 'resolved' %}success{% else %}secondary{% endif %}">
+                                    {{ ticket.get_status_display }}
+                                </span>
+                            </td>
+                            <td>{{ ticket.assigned_to.username|default:"Unassigned" }}</td>
+                            <td>{{ ticket.created_at|date:"M d, Y" }}</td>
+                            <td>
+                                <a href="{% url 'admin_ticket_manage' ticket.pk %}" class="btn btn-sm btn-primary">
+                                    Manage
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i> No tickets found with the selected filter.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
